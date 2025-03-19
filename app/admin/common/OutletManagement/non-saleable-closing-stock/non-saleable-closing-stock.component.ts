@@ -53,6 +53,11 @@ export class NonSaleableClosingStockComponent implements OnInit {
   EODstatus: any;
   docdate: any;
   lockdate: any;
+  AddProductList:any = [];
+  ObjAddProduct: AddProduct = new AddProduct()
+  addProductFormSubmitted:boolean = false;
+  ProSpinner:boolean = false;
+  AddProSpinner:boolean = false;
 
   constructor(
     private Header: CompacctHeader,
@@ -75,6 +80,7 @@ export class NonSaleableClosingStockComponent implements OnInit {
     this.getbilldate();
     this.getCostCenter();
     this.getLockDate();
+    this.getAddProduct();
   }
   TabClick(e){
     //console.log(e)
@@ -135,17 +141,12 @@ export class NonSaleableClosingStockComponent implements OnInit {
      this.dateList = data;
    //console.log("this.dateList  ===",this.dateList);
    this.BillDate =  new Date(data[0].Outlet_Bill_Date);
-      console.log("Datevalue",this.BillDate);
       let Datetemp:Date =  new Date(data[0].Outlet_Bill_Date)
       const Timetemp =  Datetemp.setDate(Datetemp.getDate() - 1);
       this.minDate = new Date(Timetemp);
-      console.log("minDate==", this.minDate)
       let tempDate:Date =  new Date(data[0].Outlet_Bill_Date)
       const tempTimeBill =  tempDate.setDate(tempDate.getDate() + 1);
       this.maxDate = this.BillDate;
-      console.log("maxDate==", this.maxDate)
-   // on save use this
-  // this.ObjRequistion.Req_Date = this.DateService.dateTimeConvert(new Date(this.myDate));
 
  })
 }
@@ -168,7 +169,6 @@ export class NonSaleableClosingStockComponent implements OnInit {
      this.costcentdisableflag = false;
       this.getGodown();
      }
-      console.log("this.Outletid ======",this.CostCenter);
 
     });
   }
@@ -187,13 +187,14 @@ export class NonSaleableClosingStockComponent implements OnInit {
      }else{
        this.godowndisableflag = false;
      }
-      console.log("this.GodownId ======",this.GodownId);
 
     });
   }
   GetProduct(valid){
     this.NsOTclosingstockFormSubmitted = true;
     if(valid){
+      this.NsOTclosingstockFormSubmitted = false;
+      this.ProSpinner = true;
     const tempObj = {
       Cost_Cen_ID : this.ObjNsOTclosingStock.Cost_Cen_ID,
       Godown_ID : this.ObjNsOTclosingStock.godown_id
@@ -206,8 +207,8 @@ export class NonSaleableClosingStockComponent implements OnInit {
     this.GlobalAPI.getData(obj).subscribe((data:any)=>{
       this.productlist = data;
      // this.productlist[0].Issue_Qty = this.productlist[0].batch_Qty
-       console.log(" product List ===",this.productlist);
        this.NsOTclosingstockFormSubmitted = false;
+       this.ProSpinner = false;
        for(let i = 0; i < this.productlist.length ; i++){
         this.productlist[i].Closing_Qty = this.productlist[i].Batch_Qty
        }
@@ -269,15 +270,14 @@ export class NonSaleableClosingStockComponent implements OnInit {
             Batch_Qty : item.Batch_Qty,
            // System_Qty : item.batch_Qty,
             Closing_Qty	: item.Closing_Qty,
-          //  Varience_Qty : item.varience_Qty,
+           // Varience_Qty : item.varience_Qty,
             Remarks : item.Remarks ? item.Remarks : 'NA'
-         }
+          }
 
          tempArr.push({...TempObj,...obj})
         }
 
       });
-      console.log("Save Data ===", ...tempArr)
       return JSON.stringify(tempArr);
 
     }
@@ -306,11 +306,12 @@ export class NonSaleableClosingStockComponent implements OnInit {
            summary: "Doc_No  " + tempID,
            detail: "Succesfully  "  + mgs
          });
-        //  if (this.buttonname == "Save & Print") {
-        //  this.saveNprintProVoucher();
-        //  }
+         if (this.buttonname == "Update") {
+         this.tabIndexToView = 0;
+         }
          this.clearData();
         // this.IssueStockFormSubmitted = false;
+        this.GetSearchedList(true);
 
         } else{
           this.ngxService.stop();
@@ -362,7 +363,6 @@ const obj = {
 }
  this.GlobalAPI.getData(obj).subscribe((data:any)=>{
    this.Searchedlist = data;
-   console.log('Search list=====',this.Searchedlist)
    this.seachSpinner = false;
    this.nsSearchFormSubmitted = false;
  })
@@ -394,7 +394,6 @@ const obj = {
 
        }
        this.GlobalAPI.getData(obj).subscribe((data:any)=>{
-         console.log("Edit Data From API",data);
        this.editList = data;
           this.ObjNsOTclosingStock.Brand_ID = data[0].Brand_ID;
             this.ObjNsOTclosingStock.Cost_Cen_ID = data[0].Cost_Cen_ID;
@@ -559,6 +558,53 @@ const obj = {
     this.items = ["BROWSE", "CREATE"];
     this.buttonname = "Save";
   }
+  getAddProduct(){
+    const TempObj = {
+      Cost_Cen_ID : this.$CompacctAPI.CompacctCookies.Cost_Cen_ID
+    }
+    const obj = {
+      "SP_String": "SP_Outlet_Closing_Stock_Non_Saleable",
+      "Report_Name_String" : "Get_N/sealable_Product",
+      "Json_Param_String": JSON.stringify([TempObj])
+    }
+    this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      this.AddProductList = data;
+    });
+  }
+  SelectProductDetails(){
+    this.ObjAddProduct.Product_Description = undefined;
+    this.ObjAddProduct.UOM = undefined;
+    this.ObjAddProduct.Product_Type_ID = undefined;
+    this.ObjAddProduct.Product_Type = undefined;
+    if(this.ObjAddProduct.Product_ID) {
+      const productObj = this.AddProductList.filter(el=> (el.Product_ID === this.ObjAddProduct.Product_ID));
+      this.ObjAddProduct.Product_Description = productObj[0].label;
+      this.ObjAddProduct.Product_Type_ID = productObj[0].Product_Type_ID;
+      this.ObjAddProduct.Product_Type = productObj[0].Product_Type;
+      this.ObjAddProduct.UOM = productObj[0].UOM;
+    }
+  }
+  AddProduct(valid){
+    this.addProductFormSubmitted = true;
+    if (valid){
+      this.addProductFormSubmitted = false;
+      this.AddProSpinner = true;
+      this.productlist.push({
+        Product_Type_ID : this.ObjAddProduct.Product_Type_ID,
+        Product_Type : this.ObjAddProduct.Product_Type,
+        Product_ID : this.ObjAddProduct.Product_ID,
+        Product_Description : this.ObjAddProduct.Product_Description,
+        UOM : this.ObjAddProduct.UOM,
+        Batch_No : this.ObjAddProduct.Batch_No,
+        Batch_Qty : this.ObjAddProduct.Batch_Qty,
+        Closing_Qty : this.ObjAddProduct.Closing_Qty,
+        Varience_Qty : Number(this.ObjAddProduct.Batch_Qty) - Number(this.ObjAddProduct.Closing_Qty),
+        Remarks : this.ObjAddProduct.Remarks
+      })
+      this.AddProSpinner = false;
+      this.ObjAddProduct = new AddProduct();
+    }
+  }
 
 }
 class NsOTclosingStock {
@@ -572,4 +618,16 @@ class NsOTclosingStock {
   end_date : Date;
   Brand_ID : string;
   Cost_Cen_ID : string;
+}
+class AddProduct {
+  Product_ID : any;
+  Product_Description : any;
+  UOM : any;
+  Product_Type_ID : any;
+  Product_Type : any;
+  Batch_No : any;
+  Batch_Qty : any;
+  Closing_Qty : any;
+  Varience_Qty : any;
+  Remarks : any;
 }

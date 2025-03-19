@@ -166,7 +166,6 @@
                             <div class="col-lg-12">
                                 <div class="panel-group">
                                     <div class="panel panel-primary">
-
                                         <div class="panel-body">
                                             <form name="NsOTclosingstockForm" #NsOTclosingstockForm="ngForm" novalidate>
                                                 <div class="form-group">
@@ -175,85 +174,29 @@
                                                         <ejs-datepicker *ngIf="!editList.length" strictMode='true' [format]="'dd/MMM/yyyy'" [(value)]='BillDate' [min]='minDate' [max]='maxDate'></ejs-datepicker>
                                                         <input *ngIf="editList.length" class="form-control" name="Date" [disabled]="true" [ngModel]='docdate  | date :"dd-MMM-yyyy"'>
                                                     </div>
-                                                    <!-- <div class="col-sm-3">
-                                                        <label class="control-label"> Brand<sup class="text-danger">*</sup></label>
-                                                        <select class="form-control" name="Brand_ID" #Brand_ID="ngModel" [(ngModel)]="ObjNsOTclosingStock.Brand_ID" [attr.disabled]="BrandDisable ? true : null" [ngClass]="{'clearance': NsOTclosingstockFormSubmitted && Brand_ID?.errors?.required}" required>
-                                <option  [ngValue]="undefined">Select</option>
-                            <option *ngFor="let option of BrandList" value="{{option.Brand_ID}}">
-                                {{option.Brand_INI}}
-                            </option>
-                        </select>
-                                                    </div> -->
                                                     <div class="col-sm-4">
-                                                        <label class="control-label">Cost center <sup class="text-danger">*</sup>
-                                  </label>
-                                                        <select class="form-control" name="issuecostcenter" #issuecostcenter="ngModel" [(ngModel)]="ObjNsOTclosingStock.Cost_Cen_ID" (change)="getGodown()" [attr.disabled]="costcentdisableflag ? true : null" [ngClass]="{'clearance':NsOTclosingstockFormSubmitted && issuecostcenter?.errors?.required}"
-                                                            required>
-                                        <option  [ngValue]="undefined">Select</option>
-                                    <!-- <option *ngFor="let option of CostCenter" value="{{option.Cost_Cen_ID}}">
-                                        {{option.Location}}
-                                    </option> -->
-                                    <option *ngFor = "let option of CostCenter" [value] ="option.Cost_Cen_ID">
-                                      {{option.Cost_Cen_Name}}
-                                    </option>
-                                </select>
+                                                        <label class="control-label">Cost center <sup class="text-danger">*</sup></label>
+                                                        <select class="form-control" name="issuecostcenter" #issuecostcenter="ngModel" [(ngModel)]="ObjNsOTclosingStock.Cost_Cen_ID" (change)="getGodown()" [attr.disabled]="costcentdisableflag ? true : null" [ngClass]="{'clearance':NsOTclosingstockFormSubmitted && issuecostcenter?.errors?.required}" required>
+                                                            <option  [ngValue]="undefined">Select</option>
+                                                            <option *ngFor = "let option of CostCenter" [value] ="option.Cost_Cen_ID">
+                                                              {{option.Cost_Cen_Name}}
+                                                            </option>
+                                                        </select>
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <label class="control-label">Godown <sup class="text-danger">*</sup>
-                                  </label>
+                                                        <label class="control-label">Godown <sup class="text-danger">*</sup></label>
                                                         <select class="form-control" name="godown" #godown="ngModel" [(ngModel)]="ObjNsOTclosingStock.godown_id" [attr.disabled]="godowndisableflag ? true : null" [ngClass]="{'clearance':NsOTclosingstockFormSubmitted && godown?.errors?.required}" required>
-                                        <option  [ngValue]="undefined">Select</option>
-                                  <option *ngFor = "let option of GodownId" [value] ="option.godown_id">
-                                    {{option.godown_name}}
-                                  </option>
-                                </select>
-
+                                                            <option  [ngValue]="undefined">Select</option>
+                                                            <option *ngFor = "let option of GodownId" [value] ="option.godown_id">
+                                                              {{option.godown_name}}
+                                                            </option>
+                                                        </select>
                                                     </div>
-                                                    <!-- <div class="col-sm-4">
-                                  <label class="control-label"
-                                          >Select Final Material <sup class="text-danger">*</sup> &nbsp;
-                                        </label>
-                                        <p-dropdown
-                                          [options]= "selectfinalmateriallist"
-                                          name="final_material"
-                                          [(ngModel)] ="ObjBomReciepe.Product_ID"
-                                          [showClear]="true"
-                                          [emptyFilterMessage]="' No Product Found'"
-                                          (onChange)="ProductChange()"
-                                          [filter]="true"
-                                          filterBy="label,value.name"
-                                          [resetFilterOnHide] = "true"
-                                          [placeholder]="'Select Product'"
-                                          [virtualScroll]="true"
-                                          itemSize="30"
-                                          #final_material="ngModel"
-                                          [required]="true"
-                                          [ngClass]="{'clearance': BomRecipeFormSubmitted && final_material?.errors?.required}"
-                                          required>
-                                        </p-dropdown> -->
-                                                    <!-- <label class="control-label">Select Final Material <span class="text-danger">*</span></label>
-                                      <select class="form-control"
-                                         name="final_material"
-                                         #final_material="ngModel"
-                                         [(ngModel)]="ObjBomReciepe.Select_Final_Material"
-                                         [ngClass]="{'clearance': BomRecipeFormSubmitted && final_material?.errors?.required}">
-                                            <option  [ngValue]="undefined">Select</option>
-                                            <option *ngFor="let option of selectfinalmateriallist" [value]="option.Product_ID">
-                                                   {{option.Product_Description}}</option>
-                                      </select> -->
-                                                    <!-- </div> -->
-                                                    <!-- <div class="col-sm-2">
-                                    <label class="control-label">Remarks</label>
-                                          <textarea class="form-control"
-                                          name="Remarks"
-                                          #Ramarks = "ngModel"
-                                          [(ngModel)]="ObjOTclosingwithbatch.Remarks"
-                                          [ngClass]="{'clearance':OTclosingstockwithbatchFormSubmitted && Remarks?.errors?.required}"></textarea>
-                                  </div> -->
                                                     <div class="col-sm-3">
-                                                        <button type="button" (click)="GetProduct(NsOTclosingstockForm.form.valid)" class="btn btn-primary pull-right1">
-                                    <span class="glyphicon glyphicon-search"></span>  Get Product
-                                 </button>
+                                                        <button type="button" (click)="GetProduct(NsOTclosingstockForm.form.valid)" class="btn btn-primary pull-right1" [disabled]="ProSpinner">
+                                                            <p-progressSpinner *ngIf="ProSpinner" [style]="{ width: '15px', height: '15px' }" strokeWidth="8" animationDuration=".5s"></p-progressSpinner>
+                                                           <span *ngIf="!ProSpinner" class="glyphicon glyphicon-search"></span>  Get Product
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -261,10 +204,48 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <!-- <button type="button" (click)="GetProduct(NsOTclosingstockForm.form.valid)" class="btn btn-primary pull-right">
-                     <span class="glyphicon glyphicon-search"></span>  Get Product
-                  </button> -->
+                            <div class="col-lg-12">
+                                <div class="panel-group">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-body">
+                                            <form name="NsOTclosingstockAddForm" #NsOTclosingstockAddForm="ngForm" novalidate>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label">Product <sup class="text-danger">*</sup></label>
+                                                        <p-dropdown [options]="AddProductList" name="addProduct" [(ngModel)]="ObjAddProduct.Product_ID" [showClear]="true" [emptyFilterMessage]="' No Product Found'" (onChange)="SelectProductDetails()" [filter]="true" filterBy="label,value.name" [resetFilterOnHide]="true"
+                                                          [placeholder]="'Select Product'" [virtualScroll]="true" itemSize="30" #addProduct="ngModel" [required]="true" [ngClass]="{'clearance':addProductFormSubmitted && addProduct?.errors?.required}"
+                                                          required>
+                                                        </p-dropdown>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label class="control-label">Batch No <sup class="text-danger">*</sup></label>
+                                                        <input class="form-control" name="batchno" #batchno="ngModel" [(ngModel)]="ObjAddProduct.Batch_No" [ngClass]="{'clearance':addProductFormSubmitted && batchno?.errors?.required}" required>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <label class="control-label">Batch Qty <sup class="text-danger">*</sup></label>
+                                                        <input class="form-control" name="BatchQty" #BatchQty="ngModel" [(ngModel)]="ObjAddProduct.Batch_Qty" [ngClass]="{'clearance':addProductFormSubmitted && BatchQty?.errors?.required}" required CompacctDigitonly="true">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <label class="control-label">Closing Qty <sup class="text-danger">*</sup></label>
+                                                        <input class="form-control" name="ClosingQty" #ClosingQty="ngModel" [(ngModel)]="ObjAddProduct.Closing_Qty" [ngClass]="{'clearance':addProductFormSubmitted && ClosingQty?.errors?.required}" required CompacctDigitonly="true">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class='col-sm-4'>
+                                                        <label class="control-label">Remarks</label>
+                                                        <input class="form-control" name="ProductRemarks" #ProductRemarks="ngModel" [(ngModel)]="ObjAddProduct.Remarks" placeholder="Remarks">
+                                                    </div>
+                                                    <div class="col-sm-1">
+                                                        <button type="button" (click)="AddProduct(NsOTclosingstockAddForm.form.valid)" class="btn btn-primary pull-right1" [disabled]="AddProSpinner">
+                                                            <p-progressSpinner *ngIf="AddProSpinner" [style]="{ width: '15px', height: '15px' }" strokeWidth="8" animationDuration=".5s"></p-progressSpinner>
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
