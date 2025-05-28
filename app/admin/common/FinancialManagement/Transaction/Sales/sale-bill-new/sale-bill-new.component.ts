@@ -863,10 +863,48 @@ export class SaleBillNewComponent implements OnInit {
       this.GetAllProductdetails();
     }
    }
-   GetProductDetailsChange(obj){
-     console.log(obj)
-     const productObj:any = []
-     productObj.push(obj)
+  //  GetProductDetailsChange(obj){
+  //    console.log(obj)
+  //    const productObj:any = []
+  //    productObj.push(obj)
+  //    this.ObjProductInfo.Product_ID = undefined;
+  //    this.ObjProductInfo.HSN_No = undefined;
+  //    this.ObjProductInfo.Product_Specification = undefined;
+  //    this.ObjProductInfo.Godown_Id = undefined;
+  //    this.BatchNoList = [];
+  //    this.ObjProductInfo.Qty = undefined;
+  //    this.ObjProductInfo.UOM = undefined;
+  //    this.ObjProductInfo.Rate = undefined;
+  //    this.ObjProductInfo.Weight_in_Pound = 0;
+  //    this.ObjProductInfo.Acompanish = 0;
+  //    this.ObjProductInfo.CGST_Rate = undefined;
+  //    this.ObjProductInfo.CGST_Amount = undefined;
+  //    this.ObjProductInfo.SGST_Rate = undefined;
+  //    this.ObjProductInfo.SGST_Amount = undefined;
+  //    this.ObjProductInfo.IGST_Rate = undefined;
+  //    this.ObjProductInfo.IGST_Amount = undefined;
+  //    setTimeout(() => {
+  //     this.ObjProductInfo.Product_ID = productObj[0].Product_ID
+  //    }, 300);
+     
+  //   // console.log(vendorObj);
+  //    this.ObjProductInfo.HSN_No = productObj[0].HSN_No;
+  //    this.ObjProductInfo.Product_Specification = productObj[0].Product_Spec;
+  //    this.ObjProductInfo.Qty = productObj[0].Qty;
+  //    this.ObjProductInfo.UOM = productObj[0].UOM;
+  //    this.ObjProductInfo.Rate = productObj[0].Rate;
+  //    this.ObjProductInfo.Weight_in_Pound = productObj[0].Weight_in_Pound ? productObj[0].Weight_in_Pound : 1;
+  //    this.ObjProductInfo.Acompanish = productObj[0].Acompanish ? productObj[0].Acompanish : 0;
+  //    this.ObjProductInfo.CGST_Rate = productObj[0].CGST_Rate;
+  //    this.ObjProductInfo.CGST_Amount = productObj[0].CGST_Amount;
+  //    this.ObjProductInfo.SGST_Rate = productObj[0].SGST_Rate;
+  //    this.ObjProductInfo.SGST_Amount = productObj[0].SGST_Amount;
+  //    this.ObjProductInfo.IGST_Rate = productObj[0].IGST_Rate;
+  //    this.ObjProductInfo.IGST_Amount = productObj[0].IGST_Amount;
+  //    this.CalCulateTotalAmt();
+  //  }
+   GetProductDetailsChange(proid){
+    //  const productObj:any = []
      this.ObjProductInfo.Product_ID = undefined;
      this.ObjProductInfo.HSN_No = undefined;
      this.ObjProductInfo.Product_Specification = undefined;
@@ -883,25 +921,26 @@ export class SaleBillNewComponent implements OnInit {
      this.ObjProductInfo.SGST_Amount = undefined;
      this.ObjProductInfo.IGST_Rate = undefined;
      this.ObjProductInfo.IGST_Amount = undefined;
-     setTimeout(() => {
-      this.ObjProductInfo.Product_ID = productObj[0].Product_ID
-     }, 300);
+     if(proid){
+      const productObj = this.Productlist.filter(item=> item.Product_ID == proid);
+      // console.log(vendorObj);
+        this.ObjProductInfo.Product_ID = productObj[0].Product_ID
+        this.ObjProductInfo.Product_Specification = productObj[0].Product_Spec;
+        this.ObjProductInfo.HSN_No = productObj[0].HSN_No;
+        this.ObjProductInfo.Qty = productObj[0].Qty;
+        this.ObjProductInfo.UOM = productObj[0].UOM;
+        this.ObjProductInfo.Rate = productObj[0].Rate;
+        this.ObjProductInfo.Weight_in_Pound = productObj[0].Weight_in_Pound ? productObj[0].Weight_in_Pound : 1;
+        this.ObjProductInfo.Acompanish = productObj[0].Acompanish ? productObj[0].Acompanish : 0;
+        this.ObjProductInfo.CGST_Rate = productObj[0].CGST_Rate;
+        this.ObjProductInfo.CGST_Amount = productObj[0].CGST_Amount;
+        this.ObjProductInfo.SGST_Rate = productObj[0].SGST_Rate;
+        this.ObjProductInfo.SGST_Amount = productObj[0].SGST_Amount;
+        this.ObjProductInfo.IGST_Rate = productObj[0].IGST_Rate;
+        this.ObjProductInfo.IGST_Amount = productObj[0].IGST_Amount;
+        this.CalCulateTotalAmt();
+     }
      
-    // console.log(vendorObj);
-     this.ObjProductInfo.HSN_No = productObj[0].HSN_No;
-     this.ObjProductInfo.Product_Specification = productObj[0].Product_Spec;
-     this.ObjProductInfo.Qty = productObj[0].Qty;
-     this.ObjProductInfo.UOM = productObj[0].UOM;
-     this.ObjProductInfo.Rate = productObj[0].Rate;
-     this.ObjProductInfo.Weight_in_Pound = productObj[0].Weight_in_Pound ? productObj[0].Weight_in_Pound : 1;
-     this.ObjProductInfo.Acompanish = productObj[0].Acompanish ? productObj[0].Acompanish : 0;
-     this.ObjProductInfo.CGST_Rate = productObj[0].CGST_Rate;
-     this.ObjProductInfo.CGST_Amount = productObj[0].CGST_Amount;
-     this.ObjProductInfo.SGST_Rate = productObj[0].SGST_Rate;
-     this.ObjProductInfo.SGST_Amount = productObj[0].SGST_Amount;
-     this.ObjProductInfo.IGST_Rate = productObj[0].IGST_Rate;
-     this.ObjProductInfo.IGST_Amount = productObj[0].IGST_Amount;
-     this.CalCulateTotalAmt();
    }
    GetBatchNo() {
     this.ObjProductInfo.Batch_Number = undefined;
@@ -1269,6 +1308,7 @@ export class SaleBillNewComponent implements OnInit {
    const termobj = $.grep(ctrl.TermList,function(item: any) {return item.Term_ID == ctrl.ObjTerm.Term_ID})[0];
   // console.log(termobj);
    this.ObjTerm.Term_Name = termobj.Term_Name;
+   this.ObjTerm.Sale_Pur = termobj.Sale_Pur ? (termobj.Sale_Pur === true) ? 1 : 0 : 0;
    this.ObjTerm.HSN_No = termobj.HSN_No;
    this.ObjTerm.CGST_Rate = termobj.CGST_Tax_Per;
    this.ObjTerm.SGST_Rate = termobj.SGST_Tax_Per;
@@ -1321,7 +1361,7 @@ export class SaleBillNewComponent implements OnInit {
         }
       } 
     var TERMobj = {
-      Sale_Pur : 0,
+      Sale_Pur : this.ObjTerm.Sale_Pur,
       Term_ID : this.ObjTerm.Term_ID,
       Term_Name : this.ObjTerm.Term_Name,
       HSN_No : this.ObjTerm.HSN_No,

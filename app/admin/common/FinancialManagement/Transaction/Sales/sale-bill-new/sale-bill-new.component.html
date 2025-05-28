@@ -76,7 +76,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="control-label">CostCenter Name</label>
-                                        <select class="form-control" name="browsecostcenter" #browsecostcenter="ngModel" [(ngModel)]="ObjBrowseSaleBillNew.Cost_Cen_ID" [attr.disabled]="$CompacctAPI.CompacctCookies.User_Type != 'A'" 
+                                        <select class="form-control" name="browsecostcenter" #browsecostcenter="ngModel" [(ngModel)]="ObjBrowseSaleBillNew.Cost_Cen_ID" [attr.disabled]="$CompacctAPI.CompacctCookies.User_Type != 'A' ? true : null" 
                                              [ngClass]="{'clearance': SearchSaleBillNewFormSubmitted && browsecostcenter?.errors?.required}" >
                                               <option  [ngValue]="undefined">Select</option>
                                               <option  *ngFor="let option of CostCenterList" value="{{option.Cost_Cen_ID}}">
@@ -538,13 +538,14 @@
                                                   [placeholder]="'Select Product'"
                                                   [virtualScroll]="true"
                                                   itemSize="30"
+                                                  (onChange)="GetProductDetailsChange(ObjProductInfo.Product_ID)"
                                                   #product="ngModel"
                                                   [styleClass]="ProductInfoSubmitted && product.errors?.required ? 'clearance': ''"[required]="true">
-                                                  <ng-template let-col pTemplate="item">
+                                                  <!-- <ng-template let-col pTemplate="item">
                                                     <div (click)="GetProductDetailsChange(col)" class="ui-helper-clearfix"  >
                                                         <div  style="font-size:14px;margin-top:4px">{{col.label}}</div>
                                                     </div>
-                                                </ng-template>
+                                                </ng-template> -->
                                                 </p-dropdown>
                                               </div>
                                               <div class="col-sm-2">

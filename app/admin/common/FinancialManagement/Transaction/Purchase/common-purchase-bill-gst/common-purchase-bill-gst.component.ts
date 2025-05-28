@@ -874,6 +874,7 @@ export class CommonPurchaseBillGstComponent implements OnInit {
    const termobj = $.grep(ctrl.TermList,function(item: any) {return item.Term_ID == ctrl.ObjTerm.Term_ID})[0];
   // console.log(termobj);
    this.ObjTerm.Term_Name = termobj.Term_Name;
+   this.ObjTerm.Sale_Pur = termobj.Sale_Pur ? (termobj.Sale_Pur === true) ? 1 : 0 : 0;
    this.ObjTerm.HSN_No = termobj.HSN_No;
    this.ObjTerm.CGST_Rate = termobj.CGST_Tax_Per;
    this.ObjTerm.SGST_Rate = termobj.SGST_Tax_Per;
@@ -910,7 +911,7 @@ export class CommonPurchaseBillGstComponent implements OnInit {
         }
       } 
     var TERMobj = {
-      Sale_Pur : 0,
+      Sale_Pur : this.ObjTerm.Sale_Pur,
       Term_ID : this.ObjTerm.Term_ID,
       Term_Name : this.ObjTerm.Term_Name,
       HSN_No : this.ObjTerm.HSN_No,
