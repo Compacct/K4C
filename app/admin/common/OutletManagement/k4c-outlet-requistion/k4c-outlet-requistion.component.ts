@@ -858,6 +858,7 @@ exportoexcelbrowse(Arr,fileName): void {
         Req_Date : this.DateService.dateConvert(new Date(element.Req_Date)),
         Cost_Cen_Name : element.Cost_Cen_Name,
         Transaction_Date_Time : element.Transaction_Date_Time,
+        qty : element.qty,
         amount : element.amount,
         Challan_No : element.Challan_No,
         Franchise_Sale_Bill_No : element.Franchise_Sale_Bill_No
