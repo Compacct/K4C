@@ -8,6 +8,7 @@ import { CompacctCommonApi } from "../../../shared/compacct.services/common.api.
 import { CompacctHeader } from "../../../shared/compacct.services/common.header.service";
 import { CompacctGlobalApiService } from "../../../shared/compacct.services/compacct.global.api.service";
 import { DateTimeConvertService } from "../../../shared/compacct.global/dateTime.service";
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-k4c-day-end-process',
@@ -381,12 +382,13 @@ export class K4cDayEndProcessComponent implements OnInit {
         "Report_Name_String": "Check_RTF_Status",
         "Json_Param_String" :  JSON.stringify([tempObj])
       }
-      this.GlobalAPI.getData(obj).subscribe((data:any)=>{
-        this.RTFstatus = data[0].RTF_Status;
-        // this.RTFstatus = "YES";
-        console.log("RTFstatus",this.RTFstatus);
-        this.CheckOSTstatus();
-      })
+      // this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      //   this.RTFstatus = data[0].RTF_Status;
+      //   // this.RTFstatus = "YES";
+      //   console.log("RTFstatus",this.RTFstatus);
+      //   this.CheckOSTstatus();
+      // })
+      return this.GlobalAPI.getData(obj);
     }
   }
   CheckOSTstatus(){
@@ -402,12 +404,13 @@ export class K4cDayEndProcessComponent implements OnInit {
         "Report_Name_String": "Check_Outlet_Stock_Transfer_Status",
         "Json_Param_String" :  JSON.stringify([tempObj])
       }
-      this.GlobalAPI.getData(obj).subscribe((data:any)=>{
-        this.OSTstatus = data[0].Outlet_Stock_Transfer_Status;
-        // this.OSTstatus = "YES";
-        console.log("OSTstatus",this.OSTstatus);
-        this.CheckDispChallanStatus();
-      })
+      // this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      //   this.OSTstatus = data[0].Outlet_Stock_Transfer_Status;
+      //   // this.OSTstatus = "YES";
+      //   console.log("OSTstatus",this.OSTstatus);
+      //   this.CheckDispChallanStatus();
+      // })
+      return this.GlobalAPI.getData(obj);
     }
   }
   CheckDispChallanStatus(){
@@ -423,11 +426,12 @@ export class K4cDayEndProcessComponent implements OnInit {
         "Report_Name_String": "Check_Dispatch_Challan_Status",
         "Json_Param_String" :  JSON.stringify([tempObj])
       }
-      this.GlobalAPI.getData(obj).subscribe((data:any)=>{
-        this.DispChallanStatus = data[0].Dispatch_Challan_Status;
-        // this.DispChallanStatus = "YES";
-        console.log("DispChallanStatus",this.DispChallanStatus);
-      })
+      // this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      //   this.DispChallanStatus = data[0].Dispatch_Challan_Status;
+      //   // this.DispChallanStatus = "YES";
+      //   console.log("DispChallanStatus",this.DispChallanStatus);
+      // })
+      return this.GlobalAPI.getData(obj);
     }
   }
   CheckCrateTransferStatus(){
@@ -443,11 +447,12 @@ export class K4cDayEndProcessComponent implements OnInit {
         "Report_Name_String": "Check_accept_crate_Status",
         "Json_Param_String" :  JSON.stringify([tempObj])
       }
-      this.GlobalAPI.getData(obj).subscribe((data:any)=>{
-        this.CrateTransferStatus = data[0].Crate_Accept_Status;
-        // this.CrateTransferStatus = "YES";
-        console.log("CrateTransferStatus",this.CrateTransferStatus);
-      })
+      // this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      //   this.CrateTransferStatus = data[0].Crate_Accept_Status;
+      //   // this.CrateTransferStatus = "YES";
+      //   console.log("CrateTransferStatus",this.CrateTransferStatus);
+      // })
+      return this.GlobalAPI.getData(obj);
     }
   }
   CheckAdvOrDel(){
@@ -464,13 +469,26 @@ export class K4cDayEndProcessComponent implements OnInit {
       console.log("Save Check",data);
       var msg = data[0].Status;
       if(data[0].Status === "YES"){
-        this.CheckRTFstatus();
-        // this.CheckOSTstatus();
-        // this.CheckDispChallanStatus();
-        this.CheckCrateTransferStatus();
-        setTimeout(() => {
-          this.saveCheck();
-        }, 500);
+        // this.CheckRTFstatus();
+        // this.CheckCrateTransferStatus();
+        // setTimeout(() => {
+        //   this.saveCheck();
+        // }, 500);
+        forkJoin([
+        this.CheckRTFstatus(),
+        this.CheckOSTstatus(),
+        this.CheckDispChallanStatus(),
+        this.CheckCrateTransferStatus()
+      ]).subscribe(([rtf, ost, disp, crate]:any) => {
+
+        this.RTFstatus = rtf[0].RTF_Status;
+        this.OSTstatus = ost[0].Outlet_Stock_Transfer_Status;
+        this.DispChallanStatus = disp[0].Dispatch_Challan_Status;
+        this.CrateTransferStatus = crate[0].Crate_Accept_Status;
+
+        this.saveCheck(); // all APIs completed
+
+      });
       }
       else{
         this.compacctToast.clear();
@@ -484,6 +502,10 @@ export class K4cDayEndProcessComponent implements OnInit {
     })
   }
   saveCheck(){
+    console.log("RTFstatus",this.RTFstatus);
+    console.log("OSTstatus",this.OSTstatus);
+    console.log("DispChallanStatus",this.DispChallanStatus);
+    console.log("CrateTransferStatus",this.CrateTransferStatus);
    const tempObj = {
       Cost_Cen_ID : this.$CompacctAPI.CompacctCookies.Cost_Cen_ID,
       Date : this.DateService.dateConvert(new Date(this.Datevalue))
