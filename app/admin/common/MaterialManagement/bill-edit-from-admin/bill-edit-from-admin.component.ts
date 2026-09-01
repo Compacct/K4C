@@ -427,13 +427,27 @@ autoaFranchiseBill() {
     })
     }
     
-  PrintBill(obj) {
-    if (obj.Bill_No) {
-      window.open("/Report/Crystal_Files/K4C/K4C_Bill_Print.aspx?DocNo=" + obj.Bill_No, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500'
+  // PrintBill(obj) {
+  //   if (obj.Bill_No) {
+  //     window.open("/Report/Crystal_Files/K4C/K4C_Bill_Print.aspx?DocNo=" + obj.Bill_No, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500'
     
-      );
+  //     );
+  //   }
+  // }
+  PrintBill(dataobj:any){   // changed by backend on 01-09-2026
+  if (dataobj.Bill_No) {
+    const obj = {
+      "SP_String": "SP_Controller_Master",
+      "Report_Name_String": "get_print_details",
+      "Json_Param_String": JSON.stringify([{doc_no : dataobj.Bill_No}])
     }
+    this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      const printlink = data[0].Column1;
+      window.open(printlink, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500');
+
+    })
   }
+}
   onReject(){}
   // BROWSE END
   // CREATE START

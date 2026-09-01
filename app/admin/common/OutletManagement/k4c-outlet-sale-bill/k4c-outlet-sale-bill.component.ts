@@ -421,11 +421,27 @@ export class K4cOutletSaleBillComponent implements OnInit,AfterViewInit {
     event.preventDefault();
     }
 
-  getbilldate(){
+//   getbilldate(){
+//      const obj = {
+//       "SP_String": "SP_Controller_Master",
+//       "Report_Name_String": "Get - Outlet Bill Date",
+//       //"Json_Param_String": JSON.stringify([{Doc_Type : "Sale_Bill"}])
+
+//     }
+//     this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+//       this.dateList = data;
+//     //console.log("this.dateList  ===",this.dateList);
+//    this.myDate =  new Date(data[0].Outlet_Bill_Date);
+//     // on save use this
+//    // this.ObjRequistion.Req_Date = this.DateService.dateTimeConvert(new Date(this.myDate));
+
+//   })
+// }
+getbilldate(){   // changed by backend on 01-09-2026
      const obj = {
       "SP_String": "SP_Controller_Master",
-      "Report_Name_String": "Get - Outlet Bill Date",
-      //"Json_Param_String": JSON.stringify([{Doc_Type : "Sale_Bill"}])
+      "Report_Name_String": "Get - pos bill date",
+      "Json_Param_String": JSON.stringify([{fin_year_id : this.$CompacctAPI.CompacctCookies.Fin_Year_ID}])
 
     }
     this.GlobalAPI.getData(obj).subscribe((data:any)=>{
@@ -2139,15 +2155,31 @@ SaleBillPrint(obj) {
   }
 }
 
-SaveNPrintBill() {
-  if (this.Hold_Bill_Flag == false){
-  if (this.Objcustomerdetail.Bill_No) {
-    window.open("/Report/Crystal_Files/K4C/K4C_Bill_Print.aspx?DocNo=" + this.Objcustomerdetail.Bill_No, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500'
+// SaveNPrintBill() {
+//   if (this.Hold_Bill_Flag == false){
+//   if (this.Objcustomerdetail.Bill_No) {
+//     window.open("/Report/Crystal_Files/K4C/K4C_Bill_Print.aspx?DocNo=" + this.Objcustomerdetail.Bill_No, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500'
 
-    );
+//     );
+//   }
+//   }
+//   console.log('Doc_No ==', this.Objcustomerdetail.Bill_No)
+// }
+SaveNPrintBill(){
+  if (this.Hold_Bill_Flag == false){
+    if (this.Objcustomerdetail.Bill_No) {
+      const obj = {
+        "SP_String": "SP_Controller_Master",
+        "Report_Name_String": "get_print_details",
+        "Json_Param_String": JSON.stringify([{doc_no : this.Objcustomerdetail.Bill_No}])
+      }
+      this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+        const printlink = data[0].Column1;
+        window.open(printlink, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500');
+
+      })
+    }
   }
-  }
-  console.log('Doc_No ==', this.Objcustomerdetail.Bill_No)
 }
 //AFTER SAVE
 Cancelpopup(){
@@ -2622,11 +2654,25 @@ geteditmaster(Bill_No){
 })
 }
 //BROWSE BILL
-PrintBill(obj) {
-  if (obj.Bill_No) {
-    window.open("/Report/Crystal_Files/K4C/K4C_Bill_Print.aspx?DocNo=" + obj.Bill_No, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500'
+// PrintBill(obj) {
+//   if (obj.Bill_No) {
+//     window.open("/Report/Crystal_Files/K4C/K4C_Bill_Print.aspx?DocNo=" + obj.Bill_No, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500'
 
-    );
+//     );
+//   }
+// }
+PrintBill(dataobj:any){   // changed by backend on 01-09-2026
+  if (dataobj.Bill_No) {
+    const obj = {
+      "SP_String": "SP_Controller_Master",
+      "Report_Name_String": "get_print_details",
+      "Json_Param_String": JSON.stringify([{doc_no : dataobj.Bill_No}])
+    }
+    this.GlobalAPI.getData(obj).subscribe((data:any)=>{
+      const printlink = data[0].Column1;
+      window.open(printlink, 'mywindow', 'fullscreen=yes, scrollbars=auto,width=950,height=500');
+
+    })
   }
 }
 
