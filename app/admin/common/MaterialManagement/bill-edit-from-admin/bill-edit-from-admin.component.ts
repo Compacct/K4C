@@ -1558,6 +1558,9 @@ checkdiscountamt(){
     if (this.CustumerName == "SWIGGY" || this.CustumerName == "ZOMATO") {
       reportname = "Save_Swiggy_Zomato_POS_Sale_Bill"
     } 
+    else if(this.CustumerName == "OWNLY"){
+      reportname = "Save_Ownly_POS_Sale_Bill"
+    }
     else {
       reportname = "Save_POS_Sale_Bill"
     }

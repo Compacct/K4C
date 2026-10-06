@@ -83,6 +83,35 @@
         </div>
     </ng-template>
 </p-toast>
+<p-toast position="center" key="OrderNoO" styleClass="custom-orderno-toast" (onClose)="onReject()" [modal]="true" [autoZIndex]="true">
+    <ng-template let-message pTemplate="message">
+        <div class="row" style="text-align: center">
+            <i class="pi pi-id-card" style="font-size: 3em"></i>
+            <!-- <h3>{{ message.summary }}</h3>
+      <p>{{ message.detail }}</p> -->
+            <form>
+                <div class="form-group">
+                    <div class='col-sm-12'>
+                        <label class="control-label">Order No</label>
+                        <input class="form-control" name="oRDER_nO" #oRDER_nO="ngModel" id='OrderNoCheck' oninput="event.target.value = event.target.value.replace(/[^0-9]/g, '');" maxlength="19" (keypress)="onKeypressEvent($event)" (keydown)="onKeydownMain3($event, 'OrderNoCheck')" [(ngModel)]="Order_No" placeholder="Order No">
+                    </div>
+                    <div class='col-sm-12' *ngIf="keypressmsg && !Order_No">
+                        <p style="color:red">{{keypressmsg}}</p>
+                    </div>
+                    <div class='col-sm-12'>
+                        <label class="control-label">Order Date</label>
+                        <ejs-datepicker [format]="'dd/MMM/yyyy'" id='OrderDate' name="OrderDate" #OrderDate="ngModel" [(ngModel)]="Order_Date" placeholder="dd/MMM/yyyy">
+                        </ejs-datepicker>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row text-center" style="margin-top: 2em;">
+            <button type="button" pButton (click)="onConfirmSwiggyZomato('OWNLY')" label="Yes" class="ui-button-success"></button>
+            <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+        </div>
+    </ng-template>
+</p-toast>
 
 <div class="row">
     <div class="col-xs-12">
@@ -628,7 +657,7 @@
                                                     </div>
                                                     <div class='col-sm-12'>
                                                         <label class="control-label">Cash Amount:</label>
-                                                        <input class="form-control" type="text" style="text-align: center" name="cash" #cash="ngModel" [disabled]='QueryStringObj?.Txn_ID' [(ngModel)]="ObjcashForm.Cash_Amount" (ngModelChange)="AmountChange()" CompacctDigitonly="true">
+                                                        <input class="form-control" type="text" style="text-align: center" name="cash" #cash="ngModel" [disabled]="(QueryStringObj?.Txn_ID) && (ObjaddbillForm.Ledger_Name != 'OWNLY')" [(ngModel)]="ObjcashForm.Cash_Amount" (ngModelChange)="AmountChange()" CompacctDigitonly="true">
                                                     </div>
                                                     <div class='col-sm-12'>
                                                         <label class="control-label">Other Payment Mode: </label>
@@ -656,7 +685,7 @@
                                                             <button (click)="getdataforrequestdetails()" class="btn createPatient" [disabled]="txnbuttondisabled" style="background-color: #587ea3; color: white;"> Request</button> &nbsp; 
                                                             <button  (click)="CheckTransaction()" class="btn createPatient" [disabled]="confirmtxnflag" style="background-color: #587ea3; color: white;"> Confirm</button>
                                                         </div>
-                                                        <input class="form-control" type="text" style="text-align: center" name="card" #card="ngModel" [disabled]='QueryStringObj?.Txn_ID || txndisabled' [(ngModel)]="ObjcashForm.Card_Amount" (ngModelChange)="AmountChange()" CompacctDigitonly="true">
+                                                        <input class="form-control" type="text" style="text-align: center" name="card" #card="ngModel" [disabled]="(QueryStringObj?.Txn_ID || txndisabled) && (ObjaddbillForm.Ledger_Name != 'OWNLY')" [(ngModel)]="ObjcashForm.Card_Amount" (ngModelChange)="AmountChange()" CompacctDigitonly="true">
                                                     </div>
                                                     <!-- <div class='col-sm-12'>
                                                         <label class="control-label">Coupon Percentage: </label>
@@ -745,19 +774,24 @@
 <p-dialog header="" [appendTo]="'body'" [(visible)]="AfterSavePoppup" [modal]="true" [closable]="false" [closeOnEscape]="false" [responsive]="true" [minY]="50"  [style]="{width: '40%', minWidth: '50px'}">
 
     <div class="form-group">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <button type="button" (click)="TakeAway('bill')" class="btn btn-warning btn-lg">
                 <i class="fa fa-shopping-bag"></i>&nbsp;  TAKE AWAY
             </button>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <button type="button" (click)="SwiggyZomato('SWIGGY')" class="btn btn-info btn-lg">
                 <i class="fa fa-comments-o"></i>&nbsp;  SWIGGY
             </button>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <button type="button" (click)="SwiggyZomato('ZOMATO')" class="btn btn-info btn-lg">
                 <i class="fa fa-comments-o"></i>&nbsp;  ZOMATO
+            </button>
+        </div>
+        <div class="col-sm-3">
+            <button type="button" (click)="SwiggyZomato('OWNLY')" class="btn btn-info btn-lg">
+                <i class="fa fa-comments-o"></i>&nbsp;  OWNLY
             </button>
         </div>
     </div>

@@ -577,7 +577,7 @@ autoaFranchiseBill() {
     // }
     const TempObj = {
       Cost_Cen_ID : this.$CompacctAPI.CompacctCookies.Cost_Cen_ID,
-      Bill_Type : this.ObjaddbillForm.Ledger_Name ? 'Online' : ''
+      Bill_Type : (this.ObjaddbillForm.Ledger_Name) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY') ? 'Online' : ''
      }
     const obj = {
       "SP_String": "SP_For_POS_Current_Stock",
@@ -699,7 +699,7 @@ getcredittoaccount(){
      }
      this.GlobalAPI.getData(obj).subscribe((data:any)=>{
        this.creditlist = data;
-       if (!this.ObjaddbillForm.Ledger_Name) {
+       if (!this.ObjaddbillForm.Ledger_Name || (this.ObjaddbillForm.Ledger_Name === 'OWNLY')) {
         this.creditlist = data;
        } else {
         var couponid = this.creditlist.filter(function(value, index, arr){
@@ -740,7 +740,7 @@ getcredittoaccount(){
 // }
 getwalletamount(){
   this.walletlist = [];
-  if(this.QueryStringObj && this.QueryStringObj.Txn_ID) {
+  if((this.QueryStringObj) && (this.QueryStringObj.Txn_ID) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY')) {
     const obj = {
       "SP_String": "SP_Controller_Master",
       "Report_Name_String": "Get - Online Ledger"
@@ -752,7 +752,7 @@ getwalletamount(){
        console.log('wallet ==', this.walletlist)
      })
   }
-  else if(this.ObjaddbillForm.Ledger_Name) {
+  else if((this.ObjaddbillForm.Ledger_Name) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY')) {
    const obj = {
      "SP_String": "SP_Controller_Master",
      "Report_Name_String": "Get - Online Ledger"
@@ -1050,7 +1050,7 @@ CalculateTotalAmt() {
   this.Adv = this.IsAdvance ? Number(this.Adv) : 0;
   this.Net_Payable = Number(Number(this.Amount_Payable) - Number(this.Adv)).toFixed(2);
   //var creditamt = 0;
-  if(this.QueryStringObj && this.QueryStringObj.Txn_ID){
+  if((this.QueryStringObj && this.QueryStringObj.Txn_ID) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY')){
     //this.ObjcashForm.Credit_To_Amount = creditamt;
     this.ObjcashForm.Wallet_Amount = this.Net_Payable;
     this.ObjcashForm.Total_Paid = this.Net_Payable;
@@ -2097,9 +2097,12 @@ this.ObjcashForm.Credit_To_Ac = this.ObjcashForm.Credit_To_Ac ? this.ObjcashForm
 }
 SaveFranSaleBill(){
   let reportname = "";
-  if (this.QueryStringObj.Ledger_Name) {
+  if ((this.ObjaddbillForm.Ledger_Name) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY')) {
     reportname = "Save_Swiggy_Zomato_POS_Sale_Bill"
-  } 
+  }  
+  else if((this.ObjaddbillForm.Ledger_Name) && (this.ObjaddbillForm.Ledger_Name === 'OWNLY')){
+    reportname = "Save_Ownly_POS_Sale_Bill"
+  }
   else {
     reportname = "Save_POS_Sale_Bill"
   }
@@ -2220,6 +2223,19 @@ Cancelpopup(){
     this.compacctToast.clear();
     this.compacctToast.add({
       key: "OrderNoZ",
+      sticky: true,
+      severity: "info",
+      summary: "Are you sure?",
+      detail: "Confirm to proceed"
+    });
+  }
+  if(val === "OWNLY"){
+    this.ObjaddbillForm.Ledger_Name = val;
+    this.getselectitem();
+    this.getcredittoaccount();
+    this.compacctToast.clear();
+    this.compacctToast.add({
+      key: "OrderNoO",
       sticky: true,
       severity: "info",
       summary: "Are you sure?",
@@ -2505,6 +2521,7 @@ onConfirmSwiggyZomato(val) {
     this.Order_Date = this.DateService.dateConvert(new Date(this.Order_Date));
     this.compacctToast.clear('OrderNo');
     this.compacctToast.clear('OrderNoZ');
+    this.compacctToast.clear('OrderNoO');
     this.ObjaddbillForm.Advance = this.Order_No;
     this.ObjaddbillForm.Order_Date = this.Order_Date;
     this.ObjaddbillForm.Ledger_Name = val;
@@ -2531,6 +2548,7 @@ onConfirmSwiggyZomato(val) {
       this.Order_Date = this.DateService.dateConvert(new Date(this.Order_Date));
       this.compacctToast.clear('OrderNo');
       this.compacctToast.clear('OrderNoZ');
+      this.compacctToast.clear('OrderNoO');
       this.ObjaddbillForm.Advance = this.Order_No;
       this.ObjaddbillForm.Order_Date = this.Order_Date;
       this.ObjaddbillForm.Ledger_Name = val;
@@ -2546,6 +2564,32 @@ onConfirmSwiggyZomato(val) {
           severity: "error",
           summary: "Warn Message ",
           detail: "Order no. should be 10 digit. "
+        })
+      }
+    }
+  }
+  if (val === "OWNLY")  {
+    if(this.Order_No && this.Order_Date) {
+      if (this.Order_No.length === 19) {
+      this.Order_Date = this.DateService.dateConvert(new Date(this.Order_Date));
+      this.compacctToast.clear('OrderNo');
+      this.compacctToast.clear('OrderNoZ');
+      this.compacctToast.clear('OrderNoO');
+      this.ObjaddbillForm.Advance = this.Order_No;
+      this.ObjaddbillForm.Order_Date = this.Order_Date;
+      this.ObjaddbillForm.Ledger_Name = val;
+      // this.getselectitem();
+      this.getwalletamount();
+      this.ngxService.stop();
+      }
+      else {
+        this.ngxService.stop();
+        // this.compacctToast.clear();
+        this.compacctToast.add({
+          key: "compacct-toast",
+          severity: "error",
+          summary: "Warn Message ",
+          detail: "Order no. should be 19 digit. "
         })
       }
     }

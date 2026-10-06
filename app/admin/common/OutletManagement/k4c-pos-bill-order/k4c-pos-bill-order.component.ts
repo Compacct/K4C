@@ -489,6 +489,27 @@ export class K4cPosBillOrderComponent implements OnInit, OnDestroy {
         }
       }
     }
+    if (this.ClickedOnlineLedger['Ledger_Name'] === "OWNLY")  {
+      if(this.ClickedOnlineLedger['Order_No'] && this.ClickedOnlineLedger['Order_Date']) {
+        if (this.ClickedOnlineLedger['Order_No'].length === 19) {
+        this.ClickedOnlineLedger['Order_Date'] = this.DateService.dateConvert(new Date(this.ClickedOnlineLedger['Order_Date']));
+        this.compacctToast.clear('OrderNo');
+        this.compacctToast.clear('OrderNoZ');
+        this.ClickedOnlineLedger['Redirect_To'] = './K4C_Outlet_Sale_Bill';
+        this.DynamicRedirectTo(this.ClickedOnlineLedger);
+        this.ClickedOnlineLedger = {};
+        }
+        else {
+          // this.compacctToast.clear();
+          this.compacctToast.add({
+            key: "compacct-toast",
+            severity: "error",
+            summary: "Warn Message ",
+            detail: "Order no. should be 19 digit. "
+          })
+        }
+      }
+    }
   }
   onReject() {
     this.ClickedOnlineLedger = {};
