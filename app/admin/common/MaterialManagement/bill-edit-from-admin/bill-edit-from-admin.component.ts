@@ -287,7 +287,7 @@ autoaFranchiseBill() {
        //console.log("this.EditDoc_No ", this.Objcustomerdetail.Bill_No );
       this.GetProductTypeFilterList();
       this.getselectitem();
-      if (this.CustumerName == "SWIGGY" || this.CustumerName == "ZOMATO") {
+      if (this.CustumerName == "SWIGGY" || this.CustumerName == "ZOMATO" || this.CustumerName == "OWNLY") {
         this.getonlinewalletlist();
       } else {
         this.getwalletamount();

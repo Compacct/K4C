@@ -740,7 +740,7 @@ getcredittoaccount(){
 // }
 getwalletamount(){
   this.walletlist = [];
-  if((this.QueryStringObj) && (this.QueryStringObj.Txn_ID) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY')) {
+  if(this.QueryStringObj && this.QueryStringObj.Txn_ID) {
     const obj = {
       "SP_String": "SP_Controller_Master",
       "Report_Name_String": "Get - Online Ledger"
@@ -752,7 +752,7 @@ getwalletamount(){
        console.log('wallet ==', this.walletlist)
      })
   }
-  else if((this.ObjaddbillForm.Ledger_Name) && (this.ObjaddbillForm.Ledger_Name != 'OWNLY')) {
+  else if(this.ObjaddbillForm.Ledger_Name) {
    const obj = {
      "SP_String": "SP_Controller_Master",
      "Report_Name_String": "Get - Online Ledger"
